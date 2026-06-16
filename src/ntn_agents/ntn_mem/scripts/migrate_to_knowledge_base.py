@@ -37,7 +37,7 @@ from urllib.request import Request, urlopen
 
 # Config
 MEM_DB = os.environ.get("NTN_MEM_DB", "/data/mem.db")
-QDRANT_URL = os.environ.get("NTN_QDRANT_URL", "http://10.69.68.15:6333")
+QDRANT_URL = os.environ.get("NTN_QDRANT_URL", "http://localhost:6333")
 SOURCE_PROJECTS = ("hermesagent-cn", "ccb-docs")
 TARGET_PROJECT = "knowledge_reserve"
 

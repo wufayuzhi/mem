@@ -57,11 +57,15 @@ class LLMProvider:
         self.timeout = timeout
         self.max_tokens = max_tokens
 
+    _SECRETS_FILE = os.environ.get(
+        "NTN_MEM_SECRETS_FILE", "/etc/ntn-agents/secrets.env"
+    )
+
     @staticmethod
     def _fallback_secret(var_name: str) -> str | None:
-        """Read a variable from /etc/ntn-agents/secrets.env on disk."""
+        """Read a variable from the secrets file on disk."""
         try:
-            with open("/etc/ntn-agents/secrets.env", "r", encoding="utf-8") as f:
+            with open(LLMProvider._SECRETS_FILE, "r", encoding="utf-8") as f:
                 for line in f:
                     line = line.strip()
                     if line.startswith(f"{var_name}="):
@@ -100,7 +104,7 @@ class LLMProvider:
         if not self._api_key_available():
             raise RuntimeError(
                 "LLMProvider: NTN_MEM_EMBEDDING_API_KEY not found. "
-                "Check /etc/ntn-agents/secrets.env or set the env var."
+                "Check secrets file or set the env var."
             )
 
         full_messages = list(messages)

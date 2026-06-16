@@ -20,7 +20,7 @@ Environment=NTN_MEM_DB=/data/mem.db
 Environment=NTN_MEM_PROVIDER=openai
 
 # Qdrant 向量存储
-Environment=NTN_QDRANT_URL=http://10.69.68.15:6333
+Environment=NTN_QDRANT_URL=http://localhost:6333
 
 # 注入 secrets
 EnvironmentFile=-/etc/ntn-mem/secrets.env

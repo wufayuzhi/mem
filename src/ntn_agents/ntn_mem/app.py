@@ -2106,12 +2106,12 @@ def application(environ: dict[str, Any], start_response: StartResponse) -> Itera
                         content = fh.read()
                     entries.append({"name": f, "size": len(content)})
             return _json_response(start_response, "200 OK", {
-                "base_url": "http://10.69.68.143:8081",
+                "base_url": os.environ.get("NTN_MEM_PUBLIC_URL", "http://0.0.0.0:8081"),
                 "files": entries
             })
         except Exception as exc:
             return _json_response(start_response, "200 OK", {
-                "base_url": "http://10.69.68.143:8081",
+                "base_url": os.environ.get("NTN_MEM_PUBLIC_URL", "http://0.0.0.0:8081"),
                 "files": [],
                 "note": f"Plugin system dir not ready: {exc}"
             })

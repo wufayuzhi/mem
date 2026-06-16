@@ -21,7 +21,7 @@ HOST="${NTN_MEM_HOST:-0.0.0.0}"
 PORT="${NTN_MEM_PORT:-8081}"
 DB="${NTN_MEM_DB:-/data/mem.db}"
 PROVIDER="${NTN_MEM_PROVIDER:-openai}"
-QDRANT_URL="${NTN_QDRANT_URL:-http://10.69.68.15:6333}"
+QDRANT_URL="${NTN_QDRANT_URL:-http://localhost:6333}"
 
 usage() {
     echo "用法: $0 [OPTIONS]"

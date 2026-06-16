@@ -27,7 +27,7 @@ from urllib.request import Request, urlopen
 
 # ── Config (overridable via env vars) ──
 MEM_URL = os.environ.get("NTN_MEM_URL", "http://localhost:8081").rstrip("/")
-QDRANT_URL = os.environ.get("NTN_QDRANT_URL", "http://10.69.68.15:6333")
+QDRANT_URL = os.environ.get("NTN_QDRANT_URL", "http://localhost:6333")
 MEM_DB = os.environ.get("NTN_MEM_DB", "/data/mem.db")
 LLM_MODEL = os.environ.get("EXTRACTION_MODEL", "deepseek-ai/DeepSeek-R1-0528-Qwen3-8B")
 DRY_RUN = os.environ.get("DRY_RUN", "").lower() in ("1", "true")
@@ -38,6 +38,7 @@ LOOKBACK_DAYS = int(os.environ.get("EXTRACTION_LOOKBACK_DAYS", "1"))
 MAX_MEMORIES = int(os.environ.get("EXTRACTION_MAX_MEMORIES", "200"))
 # Max input text chars for LLM
 MAX_INPUT_CHARS = int(os.environ.get("EXTRACTION_MAX_CHARS", "12000"))
+SECRETS_FILE = os.environ.get("NTN_MEM_SECRETS_FILE", "/etc/ntn-agents/secrets.env")
 
 
 # ── Helpers ──
@@ -48,7 +49,7 @@ def _get_llm_api_key() -> str | None:
     if key and "***" not in key:
         return key
     try:
-        with open("/etc/ntn-agents/secrets.env", "r", encoding="utf-8") as f:
+        with open(SECRETS_FILE, "r", encoding="utf-8") as f:
             for line in f:
                 if line.startswith("NTN_MEM_EMBEDDING_API_KEY="):
                     val = line.split("=", 1)[1].strip("\"' \t\n\r")
