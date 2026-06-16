@@ -1,0 +1,31 @@
+# =============================================================================
+# long_link.yaml.example —— OpenClaw 长链接业务配置
+#
+# 约定:
+#   - 凭证不放 YAML；botid/secret 只从 secrets.env 读取
+#   - 8 个业务角色中只有 laohao/老郝启用企微 API-mode WebSocket 长链接
+#   - 小K/xiaozhou/laoli/laochen/laosun/laowang/laozhang 只走短 webhook，统一听老郝协调/指挥
+#   - 审批提醒/审批回复复用老郝 WebSocket 交互通道，不单独配置 approval 长链接
+#   - 心跳 30s；重连退避 1→2→4→…→60s 封顶
+#
+# 部署位置:/etc/ntn-agents/long_link.yaml(0640 ntn:ntn)
+# =============================================================================
+
+# 协议层参数(OpenClaw API Mode)
+ws_url: "wss://openws.work.weixin.qq.com"
+heartbeat_seconds: 30
+reconnect_backoff_initial: 1
+reconnect_backoff_max: 60
+
+# 长链接接入对象:只允许 laohao 一路
+channels:
+  - name: laohao
+    botid_env: WECOM_LAOHAO_BOTID
+    secret_env: WECOM_LAOHAO_SECRET
+    description: "老郝个人长链接通道:接收交互消息、发送回复、承载审批提醒与审批回执"
+
+# 重连后历史回放
+replay:
+  enabled: true
+  since_strategy: last_seen_msg_ts
+  dedup_keys: [channel, msg_id, direction]

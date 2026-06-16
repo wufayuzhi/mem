@@ -1,0 +1,66 @@
+# =============================================================================
+# roles.yaml.example —— 8 个业务角色画像与 bot_mode 路由
+#
+# 约定:
+#   - 8 个业务角色:laohao/小K/xiaozhou/laoli/laochen/laosun/laowang/laozhang
+#   - 只有 laohao/老郝 是长链接 + 短 webhook 双通道(bot_mode=long_link)
+#   - 小K、小周和其余 5 个执行角色只有短 webhook 通道(bot_mode=webhook)，统一听老郝协调/指挥
+#   - 本文件不含凭证,凭证只走 secrets.env
+#
+# 部署位置:/etc/ntn-agents/roles.yaml(0640 ntn:ntn)
+# =============================================================================
+
+roles:
+  laohao:
+    bot_mode: long_link
+    persona_dir: /etc/ntn-agents/personas/laohao
+    target_sub: ntn-agents
+    allowed: true
+
+  小K:
+    bot_mode: webhook
+    persona_dir: /etc/ntn-agents/personas/xiaok
+    target_sub: ntn-agents
+    allowed: true
+
+  xiaozhou:
+    bot_mode: webhook
+    persona_dir: /etc/ntn-agents/personas/xiaozhou
+    target_sub: ntn-agents
+    allowed: true
+
+  laoli:
+    bot_mode: webhook
+    persona_dir: /etc/ntn-agents/personas/laoli
+    target_sub: ntn-agents
+    allowed: true
+
+  laochen:
+    bot_mode: webhook
+    persona_dir: /etc/ntn-agents/personas/laochen
+    target_sub: ntn-agents
+    allowed: true
+
+  laosun:
+    bot_mode: webhook
+    persona_dir: /etc/ntn-agents/personas/laosun
+    target_sub: ntn-agents
+    allowed: true
+
+  laowang:
+    bot_mode: webhook
+    persona_dir: /etc/ntn-agents/personas/laowang
+    target_sub: ntn-agents
+    allowed: true
+
+  laozhang:
+    bot_mode: webhook
+    persona_dir: /etc/ntn-agents/personas/laozhang
+    target_sub: ntn-agents
+    allowed: true
+
+# 默认派单参数(每条任务可覆盖)
+defaults:
+  child_timeout_seconds: 120
+  approval_timeout_minutes: 15
+  default_persona: laohao
