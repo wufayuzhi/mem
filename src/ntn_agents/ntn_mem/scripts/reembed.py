@@ -25,7 +25,7 @@ def _db_path() -> str:
 
 def _load_secrets_env() -> None:
     """Load EnvironmentFile and Environment lines from the ntn-mem service."""
-    env_path = "/etc/ntn-agents/secrets.env"
+    env_path = os.environ.get("NTN_MEM_SECRETS_FILE", "/etc/ntn-mem/secrets.env")
     if os.path.exists(env_path):
         with open(env_path) as f:
             for line in f:
