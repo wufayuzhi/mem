@@ -1,0 +1,35 @@
+# Unit: ntn-mem.service
+# LXD / systemd 容器部署方式
+
+[Unit]
+Description=NTN-MEM 记忆管理服务
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/ntn-mem
+
+# PYTHONPATH 指向 src/（标准 src/ layout）
+Environment=PYTHONPATH=/opt/ntn-mem/src
+
+# 数据库路径
+Environment=NTN_MEM_DB=/data/mem.db
+
+# 嵌入提供方
+Environment=NTN_MEM_PROVIDER=openai
+
+# Qdrant 向量存储
+Environment=NTN_QDRANT_URL=http://10.69.68.15:6333
+
+# 注入 secrets
+EnvironmentFile=-/etc/ntn-mem/secrets.env
+
+# HTTPS 端口
+ExecStart=/usr/bin/python3 -m ntn_agents.ntn_mem.server --host 0.0.0.0 --port 8081
+
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

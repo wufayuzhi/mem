@@ -1,83 +1,32 @@
-# =============================================================================
-# NTN-Agents 项目构建配置
-# 标准 Python 布局(src/ layout),所有可执行入口走 console_scripts
-# 死线:Python >= 3.10(SQLite3 + asyncio.timeout 都需要)
-# =============================================================================
-
 [build-system]
 requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "ntn-agents"
-version = "0.1.0"
-description = "NTN-Agents 派单/审批/长链接核心(企微 OpenClaw API Mode + ccb 权限决策接管层)"
+name = "ntn-mem"
+version = "0.2.0"
+description = "NTN-MEM 轻量记忆管理系统——冷热分层存储、场景感知搜索、决策偏置召回"
 readme = "README.md"
 requires-python = ">=3.10"
-license = { text = "Proprietary" }
+license = { text = "MIT" }
 authors = [{ name = "NTN" }]
 
-# ---------------------------------------------------------------------------
-# 运行时依赖(尽量薄)
-# ---------------------------------------------------------------------------
-dependencies = [
-    "PyYAML>=6.0",          # 配置文件解析(roles.yaml / long_link.yaml)
-    "websockets>=12.0",     # OpenClaw API Mode 长链接客户端
-    "requests>=2.31",       # mem0 HTTP 调用 + OpenClaw 握手 fallback
-    "paramiko>=3.4",        # SSH → 老张/ccb-host(NTN_SSH_KEY_PATH 鉴权)
-]
+# 零第三方依赖——全部使用 Python 标准库
+# - wsgiref → HTTP 服务
+# - urllib.request → HTTP 客户端（调 Qdrant / LLM provider）
+# - sqlite3 → 持久化存储
+dependencies = []
 
 [project.optional-dependencies]
-# 开发 + 测试链
-dev = [
-    "pytest>=8.0",
-    "pytest-asyncio>=0.23",
-    "pytest-cov>=4.1",
-    "ruff>=0.4",
-    "mypy>=1.10",
+# 仅在使用硅基流动等 OpenAI 兼容的 LLM 嵌入提供方时需要
+# pip install ntn-mem[embedding]
+embedding = [
+    "openai>=1.0",
 ]
 
 [project.scripts]
-# systemd unit 通过这些入口启动(详见 ops/systemd/)
-ntn-dispatcher    = "ntn_agents.ntn_dispatcher.main:main"
-ntn-long-link     = "ntn_agents.ntn_long_link.main:main"
-ntn-approval-bot  = "ntn_agents.ntn_approval_bot.main:main"
-ntn-state-init    = "ntn_agents.ntn_db.init_db:main"
+# 启动服务
+ntn-mem = "ntn_agents.ntn_mem.server:main"
 
-# ---------------------------------------------------------------------------
-# setuptools 包发现:src/ 布局
-# ---------------------------------------------------------------------------
 [tool.setuptools.packages.find]
 where = ["src"]
-include = ["ntn_agents*"]
-
-[tool.setuptools.package-data]
-"ntn_agents.ntn_db" = ["schema.sql", "migrations/*.sql"]
-
-# ---------------------------------------------------------------------------
-# 测试配置
-# ---------------------------------------------------------------------------
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-python_files = ["test_*.py"]
-asyncio_mode = "auto"
-addopts = "-ra -q --strict-markers"
-
-# ---------------------------------------------------------------------------
-# 代码风格
-# ---------------------------------------------------------------------------
-[tool.ruff]
-line-length = 110
-target-version = "py310"
-
-[tool.ruff.lint]
-# E/W = pycodestyle,F = pyflakes,I = isort,B = bugbear,UP = pyupgrade
-select = ["E", "W", "F", "I", "B", "UP"]
-ignore = ["E501"]  # 行长靠 line-length 控制,不强约束
-
-[tool.mypy]
-python_version = "3.10"
-strict_optional = true
-warn_unused_ignores = true
-disallow_untyped_defs = false   # 起步阶段先放宽,稳态后再收紧
-ignore_missing_imports = true

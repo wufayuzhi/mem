@@ -21,7 +21,7 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qs
 
-from ..ntn_common.timeutil import now_iso
+from ._timeutil import now_iso
 from .agent_standard import apply_standard_pull_defaults, apply_standard_push_defaults, standard_agent_profile
 from .embedding import cosine, get_embedding_provider
 from .logger import log_error, log_info, log_operation, log_warn, query_error_stats, query_errors
